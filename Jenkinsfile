@@ -15,7 +15,7 @@ pipeline  {
             steps {
                 echo 'Creating docker image ...'
                 dir('.'){
-                    sh "docker build --no-cache -t macnaer/website  . "
+                    sh "docker build --no-cache -t dany30052005/website  . "
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline  {
             steps {
                 echo " ============== pushing image =================="
                 sh '''
-                docker push macnaer/website:latest
+                docker push dany30052005/website:latest
                 '''
             }
         }
@@ -41,7 +41,7 @@ pipeline  {
             steps {
                 echo " ============== stopping all images =================="
                 sh '''
-                docker stop website
+                docker stop website 2>/dev/null || true
                 '''
             }
         } 
@@ -49,7 +49,7 @@ pipeline  {
             steps {
                 echo " ============== removing all docker containers =================="
                 sh '''
-                docker rm  website 
+                docker rm website 2>/dev/null || true 
                 '''
             }
         }
@@ -57,7 +57,8 @@ pipeline  {
             steps {
                 echo " ============== start server =================="
                 sh '''
-                docker run -d --restart=always --name website -p 80:80 macnaer/website
+                    sh "docker build --no-cache -t dany30052005/website  . "
+                docker run -d --restart=always --name website -p 80:80 dany30052005/website
                 '''
             }
         }
